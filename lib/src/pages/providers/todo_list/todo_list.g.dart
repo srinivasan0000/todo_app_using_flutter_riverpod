@@ -20,12 +20,12 @@ final todoItemProvider = AutoDisposeProvider<Todo>.internal(
 );
 
 typedef TodoItemRef = AutoDisposeProviderRef<Todo>;
-String _$todoListHash() => r'e408fe218c1be9923662e3ac0add2e9d6bef395c';
+String _$todoListHash() => r'8dd710f9ade0044c9def088fc5efa619f1a9809f';
 
 /// See also [TodoList].
 @ProviderFor(TodoList)
 final todoListProvider =
-    AutoDisposeNotifierProvider<TodoList, List<Todo>>.internal(
+    AutoDisposeAsyncNotifierProvider<TodoList, List<Todo>>.internal(
   TodoList.new,
   name: r'todoListProvider',
   debugGetCreateSourceHash:
@@ -34,6 +34,6 @@ final todoListProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$TodoList = AutoDisposeNotifier<List<Todo>>;
+typedef _$TodoList = AutoDisposeAsyncNotifier<List<Todo>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -1,46 +1,72 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../models/todo_model.dart';
+import '../../../repositories/providers/todo_repository_provider.dart';
 
 part 'todo_list.g.dart';
 
 @riverpod
 class TodoList extends _$TodoList {
-  @override
-  List<Todo> build() {
-    return [
-      const Todo(id: "1", description: 'Clean the room'),
-      const Todo(id: "2", description: 'Wash the disk'),
-      const Todo(id: "3", description: 'Do homework'),
-    ];
+@override
+  FutureOr<List<Todo>> build() {
+    print('[todoListProvider] initialized');
+    ref.onDispose(() {
+      print('[todoListProvider] disposed');
+    });
+    return _getTodos();
+  }
+  Future<List<Todo>> _getTodos() {
+    return ref.read(todosRepositoryProvider).getTodos();
+  }
+  Future<void> addTodo(String desc) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      final newTodo = Todo.create(desc);
+
+      await ref.read(todosRepositoryProvider).addTodo(todo: newTodo);
+
+      return [...state.value!, newTodo];
+    });
   }
 
-  void addTodo(String description) {
-    state = [...state, Todo.create(description)];
+
+   Future<void> editTodo(String id, String desc) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      await ref.read(todosRepositoryProvider).editTodo(id: id, desc: desc);
+
+      return [
+        for (final todo in state.value!)
+          if (todo.id == id) todo.copyWith(description:  desc) else todo
+      ];
+    });
+  }
+Future<void> toggleTodoStatus(String id) async {
+    state = const AsyncLoading();
+
+    state = await AsyncValue.guard(() async {
+      await ref.read(todosRepositoryProvider).toggleTodo(id: id);
+
+      return [
+        for (final todo in state.value!)
+          if (todo.id == id) todo.copyWith(isCompleted: !todo.isCompleted) else todo
+      ];
+    });
   }
 
-  void editTodo(String id, String description) {
-    state = [
-      for (final todo in state)
-        if (todo.id == id) todo.copyWith(description: description) else todo
-    ];
-  }
+  Future<void> removeTodo(String id) async {
+    state = const AsyncLoading();
 
-  void toggleTodoStatus(String id) {
-    state = [
-      for (var todo in state)
-        if (todo.id == id)
-          todo.copyWith(isCompleted: !todo.isCompleted)
-        else
-          todo
-    ];
-  }
+    state = await AsyncValue.guard(() async {
+      await ref.read(todosRepositoryProvider).removeTodo(id: id);
 
-  void removeTodo(String id) {
-    state = [
-      for (final todo in state)
-        if (todo.id != id) todo
-    ];
+      return [
+        for (final todo in state.value!)
+          if (todo.id != id) todo
+      ];
+    });
   }
 }
 

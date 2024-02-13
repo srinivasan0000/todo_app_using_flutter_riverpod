@@ -16,9 +16,9 @@ List<Todo> filteredTodos(FilteredTodosRef ref) {
   List<Todo> filteredTodos;
 
   filteredTodos = switch (filter) {
-    Filter.all => todos,
-    Filter.active => todos.where((todo) => !todo.isCompleted).toList(),
-    Filter.completed => todos.where((todo) => todo.isCompleted).toList(),
+    Filter.all => todos.value!,
+    Filter.active => todos.value!.where((todo) => !todo.isCompleted).toList(),
+    Filter.completed => todos.value!.where((todo) => todo.isCompleted).toList(),
   };
 
   if (search.isNotEmpty) {

@@ -3,6 +3,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:uuid/uuid.dart';
 
 part 'todo_model.freezed.dart';
+part 'todo_model.g.dart';
+
 
 Uuid _uuid = const Uuid();
 
@@ -14,8 +16,9 @@ class Todo with _$Todo {
     @Default(false) bool isCompleted,
   }) = _Todo;
 
-  factory Todo.create(String description) =>
-      Todo(id: _uuid.v4(), description: description);
+  factory Todo.create(String description) => Todo(id: _uuid.v4(), description: description);
+
+  factory Todo.fromJson(Map<String, dynamic> json) => _$TodoFromJson(json);
 }
 
 enum Filter {
