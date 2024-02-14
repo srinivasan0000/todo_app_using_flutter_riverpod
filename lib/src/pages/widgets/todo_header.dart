@@ -43,10 +43,15 @@ class _TodoHeaderState extends ConsumerState<TodoHeader> {
     //   },
     // );
 
-
-    final todos = ref.watch(todoListProvider);
     return Row(
-      children: [const Text("Todo"), const SizedBox(width: 10), Text("$getActiveTodoCount / ${todos.value!.length} item${todos.value!.length > 1 ? 's' : ''} left")],
+      children: [
+        const Text("Todo"),
+        const SizedBox(width: 10),
+        todoListState.maybeWhen(
+          data: (List<Todo> todos) => getActiveTodoCount(todos),
+          orElse: () => prevTodoCountWidget,
+        ),
+      ],
     );
   }
 }

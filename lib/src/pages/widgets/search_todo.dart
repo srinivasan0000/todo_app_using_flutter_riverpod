@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/todo_search/todo_search.dart';
+
 import '../../utils/debounce.dart';
+import '../providers/todo_search/todo_search.dart';
 
 class SearchTodo extends ConsumerStatefulWidget {
   const SearchTodo({super.key});
@@ -26,10 +28,10 @@ class _SearchTodoState extends ConsumerState<SearchTodo> {
         prefixIcon: Icon(Icons.search),
         filled: true,
       ),
-      onChanged: (value) {
-        if (value.isNotEmpty) {
+      onChanged: (String? value) {
+        if (value != null) {
           _debounce.run(() {
-            ref.read(todoSearchProvider.notifier).setSearchTerm(value);
+            ref.watch(todoSearchProvider.notifier).setSearchTerm(value);
           });
         }
       },

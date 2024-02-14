@@ -5,16 +5,15 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../models/todo_model.dart';
 import 'todo_repository.dart';
 
-
 const double kProbabiltyOfError = 0.5;
-const int kDelayDuration = 1;
+const int kDelayDuration = 500;
 
 class HiveTodosRepository extends TodosRepository {
   final Box todoBox = Hive.box('todos');
   final Random random = Random();
 
   Future<void> waitSeconds() {
-    return Future.delayed(const Duration(seconds: kDelayDuration));
+    return Future.delayed(const Duration(milliseconds: kDelayDuration));
   }
 
   @override
@@ -22,16 +21,13 @@ class HiveTodosRepository extends TodosRepository {
     await waitSeconds();
 
     try {
-      if (random.nextDouble() < kProbabiltyOfError) {
-        throw 'Fail to retrieve todos';
-      }
+      // if (random.nextDouble() < kProbabiltyOfError) {
+      //   throw 'Fail to retrieve todos';
+      // }
 
       if (todoBox.length == 0) return [];
 
-      return [
-        for (final todo in todoBox.values)
-          Todo.fromJson(Map<String, dynamic>.from(todo))
-      ];
+      return [for (final todo in todoBox.values) Todo.fromJson(Map<String, dynamic>.from(todo))];
     } catch (e) {
       rethrow;
     }
@@ -42,9 +38,9 @@ class HiveTodosRepository extends TodosRepository {
     await waitSeconds();
 
     try {
-      if (random.nextDouble() < kProbabiltyOfError) {
-        throw 'Fail to add todo';
-      }
+      // if (random.nextDouble() < kProbabiltyOfError) {
+      //   throw 'Fail to add todo';
+      // }
 
       await todoBox.put(todo.id, todo.toJson());
     } catch (e) {
@@ -62,7 +58,7 @@ class HiveTodosRepository extends TodosRepository {
       }
 
       final todoMap = todoBox.get(id);
-      todoMap['desc'] = desc;
+      todoMap['description'] = desc;
       await todoBox.put(id, todoMap);
     } catch (e) {
       rethrow;
@@ -74,12 +70,12 @@ class HiveTodosRepository extends TodosRepository {
     await waitSeconds();
 
     try {
-      if (random.nextDouble() < kProbabiltyOfError) {
-        throw 'Fail to toggle todo';
-      }
+      // if (random.nextDouble() < kProbabiltyOfError) {
+      //   throw 'Fail to toggle todo';
+      // }
 
       final todoMap = todoBox.get(id);
-      todoMap['completed'] = !todoMap['completed'];
+      todoMap['isCompleted'] = !todoMap['isCompleted'];
       await todoBox.put(id, todoMap);
     } catch (e) {
       rethrow;
@@ -91,9 +87,9 @@ class HiveTodosRepository extends TodosRepository {
     await waitSeconds();
 
     try {
-      if (random.nextDouble() < kProbabiltyOfError) {
-        throw 'Fail to remove todo';
-      }
+      // if (random.nextDouble() < kProbabiltyOfError) {
+      //   throw 'Fail to remove todo';
+      // }
 
       await todoBox.delete(id);
     } catch (e) {

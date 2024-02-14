@@ -5,16 +5,18 @@ import 'package:flutter/material.dart';
 class Debounce {
   final int milliseconds;
 
-   Debounce({required this.milliseconds});
+  Debounce({required this.milliseconds});
 
-  late Timer timer;
+  Timer? _timer;
 
   void run(VoidCallback action) {
-    timer.cancel();
-    timer = Timer(Duration(milliseconds: milliseconds), action);
+    close();
+    _timer = Timer(Duration(milliseconds: milliseconds), action);
   }
 
-  void close() {
-    timer.cancel();
+  void close() {    
+    if (_timer != null) {
+      _timer!.cancel();
+    }
   }
 }
