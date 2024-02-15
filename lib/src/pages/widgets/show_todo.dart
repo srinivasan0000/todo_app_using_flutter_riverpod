@@ -5,6 +5,7 @@ import '../providers/todo_search/todo_search.dart';
 
 import '../../models/todo_model.dart';
 import '../providers/todo_list/todo_list.dart';
+import '../providers/todo_sort/todo_sort.dart';
 
 class ShowTodo extends ConsumerStatefulWidget {
   const ShowTodo({super.key});
@@ -17,6 +18,7 @@ class _ShowTodoState extends ConsumerState<ShowTodo> {
   List<Todo> filterTodos(List<Todo> allTodos) {
     final filter = ref.watch(todoFilterProvider);
     final search = ref.watch(todoSearchProvider);
+    final sort = ref.watch(todoSortProvider);
 
     List<Todo> tempTodos;
 
@@ -28,6 +30,18 @@ class _ShowTodoState extends ConsumerState<ShowTodo> {
 
     if (search.isNotEmpty) {
       tempTodos = tempTodos.where((todo) => todo.description.toLowerCase().contains(search.toLowerCase())).toList();
+    }
+
+    if (sort == SortBy.active) {
+      tempTodos.sort((a, b) => a.isCompleted ? 1 : -1);
+    } else if (sort == SortBy.completed) {
+      tempTodos.sort((a, b) => a.isCompleted ? -1 : 1);
+    } else if (sort == SortBy.date) {
+      tempTodos.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    } else if (sort == SortBy.dateDescending) {
+      tempTodos.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    } else {
+      tempTodos = tempTodos;
     }
 
     return tempTodos;
@@ -68,15 +82,13 @@ class _ShowTodoState extends ConsumerState<ShowTodo> {
         if (allTodos.isEmpty) {
           prevTodosWidget = const Center(
             child: Text(
-              'Enter some todo',
-              style: TextStyle(fontSize: 20),
+              'Add some todo',
+              style: TextStyle(fontSize: 25),
             ),
           );
           return prevTodosWidget;
         }
-
         final filteredTodos = filterTodos(allTodos);
-
         prevTodosWidget = ListView.separated(
           itemCount: filteredTodos.length,
           separatorBuilder: (BuildContext context, int index) {
@@ -125,7 +137,7 @@ class _ShowTodoState extends ConsumerState<ShowTodo> {
 }
 
 class _TodoItem extends ConsumerWidget {
-  const _TodoItem({super.key});
+  const _TodoItem();
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final todo = ref.watch(todoItemProvider);

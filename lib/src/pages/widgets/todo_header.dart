@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/todo_theme/todo_theme.dart';
 
 import '../../models/todo_model.dart';
 
 import '../providers/todo_list/todo_list.dart';
 
 class TodoHeader extends ConsumerStatefulWidget {
-  const TodoHeader({super.key});
+ const TodoHeader({super.key});
 
   @override
   ConsumerState<TodoHeader> createState() => _TodoHeaderState();
@@ -45,12 +46,30 @@ class _TodoHeaderState extends ConsumerState<TodoHeader> {
 
     return Row(
       children: [
-        const Text("Todo"),
+        Text("Todo", style: TextStyle(fontSize: 35, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.primary)),
         const SizedBox(width: 10),
         todoListState.maybeWhen(
           data: (List<Todo> todos) => getActiveTodoCount(todos),
           orElse: () => prevTodoCountWidget,
         ),
+        const Spacer(),
+        Row(
+          children: [
+            IconButton(
+              onPressed: () {
+                ref.read(todoThemeProvider.notifier).changeTheme();
+              },
+              icon: const Icon(Icons.light_mode),
+            ),
+            const SizedBox(width: 10),
+            IconButton(
+              onPressed: () {
+                ref.invalidate(todoListProvider);
+              },
+              icon: const Icon(Icons.refresh),
+            ),
+          ],
+        )
       ],
     );
   }

@@ -22,6 +22,7 @@ Todo _$TodoFromJson(Map<String, dynamic> json) {
 mixin _$Todo {
   String get id => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
+  DateTime get createdAt => throw _privateConstructorUsedError;
   bool get isCompleted => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -34,7 +35,8 @@ abstract class $TodoCopyWith<$Res> {
   factory $TodoCopyWith(Todo value, $Res Function(Todo) then) =
       _$TodoCopyWithImpl<$Res, Todo>;
   @useResult
-  $Res call({String id, String description, bool isCompleted});
+  $Res call(
+      {String id, String description, DateTime createdAt, bool isCompleted});
 }
 
 /// @nodoc
@@ -52,6 +54,7 @@ class _$TodoCopyWithImpl<$Res, $Val extends Todo>
   $Res call({
     Object? id = null,
     Object? description = null,
+    Object? createdAt = null,
     Object? isCompleted = null,
   }) {
     return _then(_value.copyWith(
@@ -63,6 +66,10 @@ class _$TodoCopyWithImpl<$Res, $Val extends Todo>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       isCompleted: null == isCompleted
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
@@ -78,7 +85,8 @@ abstract class _$$TodoImplCopyWith<$Res> implements $TodoCopyWith<$Res> {
       __$$TodoImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String description, bool isCompleted});
+  $Res call(
+      {String id, String description, DateTime createdAt, bool isCompleted});
 }
 
 /// @nodoc
@@ -93,6 +101,7 @@ class __$$TodoImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? description = null,
+    Object? createdAt = null,
     Object? isCompleted = null,
   }) {
     return _then(_$TodoImpl(
@@ -104,6 +113,10 @@ class __$$TodoImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      createdAt: null == createdAt
+          ? _value.createdAt
+          : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       isCompleted: null == isCompleted
           ? _value.isCompleted
           : isCompleted // ignore: cast_nullable_to_non_nullable
@@ -116,7 +129,10 @@ class __$$TodoImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TodoImpl with DiagnosticableTreeMixin implements _Todo {
   const _$TodoImpl(
-      {required this.id, required this.description, this.isCompleted = false});
+      {required this.id,
+      required this.description,
+      required this.createdAt,
+      this.isCompleted = false});
 
   factory _$TodoImpl.fromJson(Map<String, dynamic> json) =>
       _$$TodoImplFromJson(json);
@@ -126,12 +142,14 @@ class _$TodoImpl with DiagnosticableTreeMixin implements _Todo {
   @override
   final String description;
   @override
+  final DateTime createdAt;
+  @override
   @JsonKey()
   final bool isCompleted;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Todo(id: $id, description: $description, isCompleted: $isCompleted)';
+    return 'Todo(id: $id, description: $description, createdAt: $createdAt, isCompleted: $isCompleted)';
   }
 
   @override
@@ -141,6 +159,7 @@ class _$TodoImpl with DiagnosticableTreeMixin implements _Todo {
       ..add(DiagnosticsProperty('type', 'Todo'))
       ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('description', description))
+      ..add(DiagnosticsProperty('createdAt', createdAt))
       ..add(DiagnosticsProperty('isCompleted', isCompleted));
   }
 
@@ -152,13 +171,16 @@ class _$TodoImpl with DiagnosticableTreeMixin implements _Todo {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.description, description) ||
                 other.description == description) &&
+            (identical(other.createdAt, createdAt) ||
+                other.createdAt == createdAt) &&
             (identical(other.isCompleted, isCompleted) ||
                 other.isCompleted == isCompleted));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, description, isCompleted);
+  int get hashCode =>
+      Object.hash(runtimeType, id, description, createdAt, isCompleted);
 
   @JsonKey(ignore: true)
   @override
@@ -178,6 +200,7 @@ abstract class _Todo implements Todo {
   const factory _Todo(
       {required final String id,
       required final String description,
+      required final DateTime createdAt,
       final bool isCompleted}) = _$TodoImpl;
 
   factory _Todo.fromJson(Map<String, dynamic> json) = _$TodoImpl.fromJson;
@@ -186,6 +209,8 @@ abstract class _Todo implements Todo {
   String get id;
   @override
   String get description;
+  @override
+  DateTime get createdAt;
   @override
   bool get isCompleted;
   @override

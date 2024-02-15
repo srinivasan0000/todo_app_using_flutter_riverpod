@@ -3,35 +3,44 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/todo_list/todo_list.dart';
 
-class NewTodo extends ConsumerStatefulWidget {
-  const NewTodo({super.key});
+class NewTodo extends ConsumerWidget {
+  NewTodo({super.key});
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _NewTodoState();
-}
-
-class _NewTodoState extends ConsumerState<NewTodo> {
   final TextEditingController newTodoTextController = TextEditingController();
 
   @override
-  void dispose() {
-    super.dispose();
-    newTodoTextController.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-        controller: newTodoTextController,
-        decoration: const InputDecoration(
-          hintText: 'What needs to be done?',
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Card(
+        child: Center(
+          child: TextField(
+            controller: newTodoTextController,
+            decoration: InputDecoration(
+              suffixIcon: IconButton(
+                onPressed: () {
+                  String? value = newTodoTextController.value.text;
+                  if (value.isNotEmpty) {
+                    ref.read(todoListProvider.notifier).addTodo(value);
+                    newTodoTextController.clear();
+                    FocusScope.of(context).unfocus();
+                  }
+                },
+                icon: const Icon(Icons.send),
+              ),
+              hintText: 'Add Your Task Here',
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            ),
+            onSubmitted: (value) {
+              if (value.isNotEmpty) {
+                ref.read(todoListProvider.notifier).addTodo(value);
+                newTodoTextController.clear();
+              }
+            },
+          ),
         ),
-        onSubmitted: (value) {
-          if (value.isNotEmpty) {
-            ref.read(todoListProvider.notifier).addTodo(value);
-
-            newTodoTextController.clear();
-          }
-        });
+      ),
+    );
   }
 }
